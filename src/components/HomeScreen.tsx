@@ -7,6 +7,7 @@ export interface HomeScreenProps {
   onStartLearning: (category: string | null) => void;
   onAddCustomWord: (word: Word) => void;
   allWords: Word[];
+  dailyGoal?: number;
 }
 
 function getTgFirstName(): string {
@@ -23,7 +24,8 @@ export default function HomeScreen({
   progress,
   onStartLearning,
   onAddCustomWord,
-  allWords
+  allWords,
+  dailyGoal = 20,
 }: HomeScreenProps) {
   const tgName = getTgFirstName();
   const [aiInput, setAiInput] = React.useState("");
@@ -48,7 +50,7 @@ export default function HomeScreen({
   };
 
   const learnedCountForToday = progress.learnedWords.length;
-  const targetWordsPerDay = 20;
+  const targetWordsPerDay = dailyGoal;
   const progressPercent = Math.min(100, Math.round((learnedCountForToday / targetWordsPerDay) * 100));
 
   // Speech Recognition API config

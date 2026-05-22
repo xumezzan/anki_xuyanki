@@ -5,6 +5,7 @@ import LearnScreen from "./components/LearnScreen";
 import RepeatScreen from "./components/RepeatScreen";
 import GamesScreen from "./components/GamesScreen";
 import ProfileScreen from "./components/ProfileScreen";
+import OnboardingScreen from "./components/OnboardingScreen";
 import { Word, UserProgress, ActiveScreen } from "./types";
 
 // Local static fallback lists to guarantee a pristine interface instantly
@@ -144,9 +145,18 @@ const LOCAL_SAFE_FALLBACKS: Word[] = [
 ];
 
 export default function App() {
+  const [showOnboarding, setShowOnboarding] = React.useState<boolean>(() => {
+    try {
+      return !localStorage.getItem("tma_onboarding_done");
+    } catch {
+      return true;
+    }
+  });
+  const [dailyGoal, setDailyGoal] = React.useState(10);
+
   const [activeScreen, setActiveScreen] = React.useState<ActiveScreen>("home");
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
-  
+
   // Vocabulary state loading
   const [allWords, setAllWords] = React.useState<Word[]>(LOCAL_SAFE_FALLBACKS);
 
@@ -316,6 +326,14 @@ export default function App() {
     setActiveScreen("home");
   };
 
+  const handleOnboardingComplete = (goal: number) => {
+    setDailyGoal(goal);
+    try {
+      localStorage.setItem("tma_onboarding_done", "1");
+    } catch {}
+    setShowOnboarding(false);
+  };
+
   const handleAwardPoints = (points: number) => {
     saveProgress({
       ...progress,
@@ -334,6 +352,10 @@ export default function App() {
     }
   };
 
+  if (showOnboarding) {
+    return <OnboardingScreen onComplete={handleOnboardingComplete} />;
+  }
+
   return (
     <TelegramFrame
       activeScreen={activeScreen}
@@ -351,6 +373,7 @@ export default function App() {
           onStartLearning={handleStartLearning}
           onAddCustomWord={handleAddCustomWord}
           allWords={allWords}
+          dailyGoal={dailyGoal}
         />
       )}
 
