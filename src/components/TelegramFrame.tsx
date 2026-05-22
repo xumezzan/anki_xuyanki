@@ -297,12 +297,12 @@ export default function TelegramFrame({
           </div>
 
           {/* Scrollable Container with custom padding for the app UI */}
-          <div id="tma-screen-content" className="flex-1 overflow-y-auto overflow-x-hidden pb-24 scrollbar-none flex flex-col bg-[#0e1017]">
+          <div id="tma-screen-content" className="flex-1 overflow-y-auto overflow-x-hidden pb-4 scrollbar-none flex flex-col bg-[#0e1017]">
             {children}
           </div>
 
           {/* Sleek Rounded Navigation Bar */}
-          <div id="tma-bottom-nav" className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#090a0f] via-[#090a0f]/95 to-transparent pt-6 z-40">
+          <div id="tma-bottom-nav" className="relative z-50 flex-shrink-0 px-3 pb-3 pt-2 bg-[#090a0f]">
             <div className="flex justify-around items-center bg-[#151824]/95 border border-white/10 backdrop-blur-xl py-2 px-1.5 rounded-2xl shadow-xl shadow-black/40">
               
               {/* Home tab */}
