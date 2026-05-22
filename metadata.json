@@ -1,0 +1,8 @@
+{
+  "name": "English Word Memorizer",
+  "description": "Premium Telegram Mini App for learning and memorizing English words with AI help.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
