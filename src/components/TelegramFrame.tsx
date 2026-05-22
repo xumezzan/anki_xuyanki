@@ -273,9 +273,9 @@ export default function TelegramFrame({
           {/* Telegram-style Toolbar wrapper */}
           <div id="tma-header-bar" className="flex justify-between items-center px-4 py-3 border-b border-white/5 bg-[#0e1017]/95 backdrop-blur-md sticky top-0 z-50">
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse" />
+              <img src="/logo.svg" alt="logo" className="w-7 h-7 rounded-xl flex-shrink-0" />
               <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold tracking-wide text-white font-sans truncate">EngWordBot</span>
+                <span className="text-xs font-bold tracking-wide text-white font-sans truncate">Anki Huyanki</span>
                 <span className="text-[9px] text-slate-400 font-mono truncate">telegram mini app</span>
               </div>
             </div>
