@@ -147,7 +147,7 @@ const LOCAL_SAFE_FALLBACKS: Word[] = [
 export default function App() {
   const [showOnboarding, setShowOnboarding] = React.useState<boolean>(() => {
     try {
-      return !localStorage.getItem("tma_onboarding_done");
+      return !localStorage.getItem("tma_onboarding_done_v2");
     } catch {
       return true;
     }
@@ -329,7 +329,7 @@ export default function App() {
   const handleOnboardingComplete = (goal: number) => {
     setDailyGoal(goal);
     try {
-      localStorage.setItem("tma_onboarding_done", "1");
+      localStorage.setItem("tma_onboarding_done_v2", "1");
     } catch {}
     setShowOnboarding(false);
   };

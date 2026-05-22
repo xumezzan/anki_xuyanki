@@ -1,5 +1,4 @@
 import React from "react";
-import { BookOpen, Repeat2, Gamepad2, Mic } from "lucide-react";
 
 interface OnboardingScreenProps {
   onComplete: (goal: number) => void;
@@ -7,79 +6,73 @@ interface OnboardingScreenProps {
 
 const SLIDES = [
   {
+    emoji: null, // first slide uses logo
+    title: "Anki Huyanki",
+    desc: "Учи английские слова каждый день — быстро, удобно и весело.",
+    color: "from-indigo-600/25 to-violet-600/10",
+  },
+  {
     emoji: "📚",
-    title: "Учи слова\nкаждый день",
-    desc: "Карточки с переводом, транскрипцией и примерами. Переворачивай — запоминай.",
+    title: "Карточки\nс переворотом",
+    desc: "Сверху слово и транскрипция — нажми, чтобы увидеть перевод и пример.",
     color: "from-blue-600/20 to-indigo-600/10",
-    accent: "#6366f1",
-    icon: <BookOpen className="w-7 h-7" />,
   },
   {
     emoji: "🔁",
     title: "Повторяй\nпо системе",
     desc: "Сложные слова появляются чаще. Лёгкие уходят в долгосрочную память.",
     color: "from-violet-600/20 to-purple-600/10",
-    accent: "#8b5cf6",
-    icon: <Repeat2 className="w-7 h-7" />,
   },
   {
     emoji: "🎮",
     title: "Играй\nи зарабатывай XP",
     desc: "Мини-игры, серии дней, достижения. Учёба ощущается как игра.",
     color: "from-emerald-600/20 to-teal-600/10",
-    accent: "#10b981",
-    icon: <Gamepad2 className="w-7 h-7" />,
   },
   {
     emoji: "🎤",
-    title: "Добавляй слова\nголосом",
-    desc: "Скажи слово по-русски — ИИ создаст карточку с переводом и примером.",
+    title: "Добавляй слова\nголосом через ИИ",
+    desc: "Скажи слово по-русски — ИИ создаст карточку с переводом и примером автоматически.",
     color: "from-rose-600/20 to-pink-600/10",
-    accent: "#f43f5e",
-    icon: <Mic className="w-7 h-7" />,
   },
 ];
 
 const GOALS = [
-  { value: 5, label: "5 слов", sub: "Лёгкий старт" },
-  { value: 10, label: "10 слов", sub: "Оптимально" },
-  { value: 20, label: "20 слов", sub: "Серьёзный темп" },
+  { value: 5,  label: "5 слов",  sub: "Лёгкий старт",     emoji: "🌱" },
+  { value: 10, label: "10 слов", sub: "Оптимально",        emoji: "⚡" },
+  { value: 20, label: "20 слов", sub: "Серьёзный темп",    emoji: "🔥" },
 ];
 
 export default function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
-  const [step, setStep] = React.useState(0); // 0-3 slides, 4 = goal select
+  const [step, setStep] = React.useState(0);
   const [selectedGoal, setSelectedGoal] = React.useState(10);
-  const [animDir, setAnimDir] = React.useState<"in" | "out">("in");
   const [visible, setVisible] = React.useState(true);
 
-  const total = SLIDES.length; // 4 slides before goal screen
+  const total = SLIDES.length; // 5 slides, then goal
+  const slide = SLIDES[step];
 
   const goNext = () => {
     setVisible(false);
     setTimeout(() => {
       setStep((s) => s + 1);
       setVisible(true);
-    }, 200);
+    }, 180);
   };
 
-  const slide = SLIDES[step];
-
-  // Goal selection screen
+  // ── Goal selection screen ──────────────────────────────────────────────────
   if (step === total) {
     return (
-      <div className="fixed inset-0 z-[999] bg-[#08080A] flex flex-col items-center justify-center px-6 gap-8">
-        {/* Glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-64 h-64 bg-indigo-600/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="fixed inset-0 z-[999] bg-[#08080A] flex flex-col items-center justify-center px-6 gap-7">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-72 h-72 bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none" />
 
-        <div
-          className="flex flex-col items-center gap-2 text-center"
-          style={{ opacity: visible ? 1 : 0, transition: "opacity 0.2s" }}
-        >
-          <span className="text-5xl mb-2">🎯</span>
+        {/* Logo small */}
+        <img src="/logo.svg" alt="logo" className="w-16 h-16 rounded-2xl shadow-xl shadow-indigo-500/20 mb-1" />
+
+        <div className="flex flex-col items-center text-center gap-2">
           <h2 className="text-2xl font-bold text-white leading-tight">
             Сколько слов<br />учить в день?
           </h2>
-          <p className="text-sm text-white/50 mt-1">Можно изменить в любой момент</p>
+          <p className="text-sm text-white/40">Можно изменить позже в настройках</p>
         </div>
 
         <div className="w-full flex flex-col gap-3 max-w-xs">
@@ -87,26 +80,21 @@ export default function OnboardingScreen({ onComplete }: OnboardingScreenProps) 
             <button
               key={g.value}
               onClick={() => setSelectedGoal(g.value)}
-              className={`w-full flex items-center justify-between px-5 py-4 rounded-2xl border transition-all duration-150 ${
+              className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border transition-all duration-150 active:scale-[0.98] ${
                 selectedGoal === g.value
-                  ? "bg-indigo-600/20 border-indigo-500/60 scale-[1.02]"
-                  : "bg-white/5 border-white/10 hover:bg-white/8"
+                  ? "bg-indigo-600/20 border-indigo-500/50"
+                  : "bg-white/5 border-white/10"
               }`}
             >
-              <div className="flex flex-col items-start">
+              <span className="text-2xl">{g.emoji}</span>
+              <div className="flex flex-col items-start flex-1">
                 <span className="text-base font-bold text-white">{g.label}</span>
-                <span className="text-xs text-white/40 mt-0.5">{g.sub}</span>
+                <span className="text-xs text-white/40">{g.sub}</span>
               </div>
-              <div
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                  selectedGoal === g.value
-                    ? "border-indigo-400 bg-indigo-500"
-                    : "border-white/20 bg-transparent"
-                }`}
-              >
-                {selectedGoal === g.value && (
-                  <div className="w-2 h-2 rounded-full bg-white" />
-                )}
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
+                selectedGoal === g.value ? "border-indigo-400 bg-indigo-500" : "border-white/20"
+              }`}>
+                {selectedGoal === g.value && <div className="w-2 h-2 rounded-full bg-white" />}
               </div>
             </button>
           ))}
@@ -114,7 +102,7 @@ export default function OnboardingScreen({ onComplete }: OnboardingScreenProps) 
 
         <button
           onClick={() => onComplete(selectedGoal)}
-          className="w-full max-w-xs py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-base shadow-lg shadow-indigo-500/30 active:scale-[0.98] transition-all"
+          className="w-full max-w-xs py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-base shadow-lg shadow-indigo-500/25 active:scale-[0.98] transition-all"
         >
           Начать учить →
         </button>
@@ -122,28 +110,40 @@ export default function OnboardingScreen({ onComplete }: OnboardingScreenProps) 
     );
   }
 
-  // Slides 0-3
+  // ── Slides ─────────────────────────────────────────────────────────────────
+  const isFirst = step === 0;
+
   return (
     <div className="fixed inset-0 z-[999] bg-[#08080A] flex flex-col">
-      {/* Skip */}
-      <div className="flex justify-end px-6 pt-5">
+
+      {/* Ambient glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-80 h-80 bg-indigo-600/8 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* Skip button */}
+      <div className="flex justify-end px-6 pt-5 relative z-10">
         <button
           onClick={() => onComplete(10)}
-          className="text-xs text-white/30 hover:text-white/60 transition font-medium"
+          className="text-xs text-white/25 hover:text-white/50 transition font-medium px-2 py-1"
         >
           Пропустить
         </button>
       </div>
 
       {/* Slide content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-8 gap-8">
-        {/* Icon card */}
+      <div className="flex-1 flex flex-col items-center justify-center px-8 gap-7 relative z-10">
+
+        {/* Card */}
         <div
-          className={`bg-gradient-to-b ${slide.color} border border-white/10 rounded-[40px] w-48 h-48 flex flex-col items-center justify-center gap-3 shadow-2xl transition-all duration-200 ${
-            visible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+          className={`bg-gradient-to-b ${slide.color} border border-white/10 rounded-[40px] w-52 h-52 flex flex-col items-center justify-center gap-3 shadow-2xl transition-all duration-200 ${
+            visible ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-3"
           }`}
         >
-          <span className="text-6xl">{slide.emoji}</span>
+          {isFirst ? (
+            // First slide — logo
+            <img src="/logo.svg" alt="Anki Huyanki" className="w-28 h-28 rounded-3xl shadow-xl shadow-indigo-500/30" />
+          ) : (
+            <span className="text-7xl select-none">{slide.emoji}</span>
+          )}
         </div>
 
         {/* Text */}
@@ -152,17 +152,18 @@ export default function OnboardingScreen({ onComplete }: OnboardingScreenProps) 
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          <h2 className="text-2xl font-bold text-white leading-tight whitespace-pre-line">
+          <h2 className="text-[26px] font-bold text-white leading-tight whitespace-pre-line">
             {slide.title}
           </h2>
-          <p className="text-sm text-white/50 leading-relaxed max-w-[260px]">
+          <p className="text-sm text-white/50 leading-relaxed max-w-[270px]">
             {slide.desc}
           </p>
         </div>
       </div>
 
-      {/* Bottom: dots + button */}
-      <div className="flex flex-col items-center gap-6 px-6 pb-10">
+      {/* Bottom */}
+      <div className="flex flex-col items-center gap-5 px-6 pb-10 relative z-10">
+
         {/* Progress dots */}
         <div className="flex items-center gap-2">
           {SLIDES.map((_, i) => (
@@ -170,9 +171,9 @@ export default function OnboardingScreen({ onComplete }: OnboardingScreenProps) 
               key={i}
               className="rounded-full transition-all duration-300"
               style={{
-                width: i === step ? 20 : 6,
+                width:  i === step ? 22 : 6,
                 height: 6,
-                background: i === step ? "#6366f1" : "rgba(255,255,255,0.15)",
+                background: i === step ? "#6366f1" : "rgba(255,255,255,0.12)",
               }}
             />
           ))}
@@ -180,7 +181,7 @@ export default function OnboardingScreen({ onComplete }: OnboardingScreenProps) 
 
         <button
           onClick={goNext}
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-base shadow-lg shadow-indigo-500/25 active:scale-[0.98] transition-all"
+          className="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-base shadow-lg shadow-indigo-500/20 active:scale-[0.98] transition-all"
         >
           {step === total - 1 ? "Выбрать цель →" : "Далее →"}
         </button>
