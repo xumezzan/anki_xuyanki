@@ -9,12 +9,23 @@ export interface HomeScreenProps {
   allWords: Word[];
 }
 
+function getTgFirstName(): string {
+  try {
+    const tg = (window as any).Telegram?.WebApp;
+    const name = tg?.initDataUnsafe?.user?.first_name;
+    return name ? name : "";
+  } catch {
+    return "";
+  }
+}
+
 export default function HomeScreen({
   progress,
   onStartLearning,
   onAddCustomWord,
   allWords
 }: HomeScreenProps) {
+  const tgName = getTgFirstName();
   const [aiInput, setAiInput] = React.useState("");
   const [isListening, setIsListening] = React.useState(false);
   const [isAiLoading, setIsAiLoading] = React.useState(false);
@@ -131,7 +142,9 @@ export default function HomeScreen({
         
         <div className="flex flex-col gap-1 z-15">
           <p className="text-[10px] text-white/50 font-bold tracking-widest uppercase font-mono">Твой Прогресс Сегодня</p>
-          <h2 className="text-xl font-bold text-white leading-tight">Привет, учение! 👋</h2>
+          <h2 className="text-xl font-bold text-white leading-tight">
+            {tgName ? `Привет, ${tgName}! 👋` : "Привет, учение! 👋"}
+          </h2>
           <p className="text-xs text-white/80 mt-1 font-medium">
             Выучено слов: <span className="text-blue-400 font-bold font-mono text-sm">{learnedCountForToday}</span> / {targetWordsPerDay}
           </p>
